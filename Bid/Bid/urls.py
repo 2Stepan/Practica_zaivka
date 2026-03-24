@@ -16,7 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from Bidapp.views import show, add, view_requests
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', show, name = 'main'),
+    path('create/', add, name='create'), 
+    path('requests/', view_requests, name='view_requests'),
 ]
