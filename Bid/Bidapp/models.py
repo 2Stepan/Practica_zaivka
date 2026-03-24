@@ -47,3 +47,13 @@ class Request(models.Model):
 
     def __str__(self):
         return f"Заявка {self.id} - {self.client_name}"
+    
+    def update_task(self, new_service=None, new_description=None, new_status=None):
+        if new_service is not None:
+            self.service = new_service
+        if new_description is not None:
+            self.description = new_description
+        if new_status is not None:
+            self.status = new_status
+        self.save()
+        return self
