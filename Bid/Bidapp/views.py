@@ -69,14 +69,20 @@ def delete(request, request_id):
 
 
 
-#Ваня
+# Ваня - исправил поиск, теперь показывает сообщение если нет заявки
 def get(request):
     request_item = None
     request_item_id = request.GET.get('request_item_id')
-
+    
+    # Проверяем, если ID ввели
     if request_item_id:
-        request_item = get_object_or_404(Request, id=request_item_id)
-
+        try:
+            # Пытаемся найти заявку, если нет - ловим ошибку
+            request_item = Request.objects.get(id=request_item_id)
+        except Request.DoesNotExist:
+            # Если заявки нет, оставляем request_item = None
+            request_item = None
+    
     return render(request, 'request_get/index.html', {
         'request_item': request_item,
         'request_item_id': request_item_id,

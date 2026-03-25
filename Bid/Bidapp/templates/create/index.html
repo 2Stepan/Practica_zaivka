@@ -1,40 +1,57 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Создание формы</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Создание заявки</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-    <form method="POST" action="/create/">
-        {% csrf_token %}
-        <div>
-            <label for="client_name">Имя клиента:</label>
-            <input type="text" id="client_name" name="client_name" required>
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="mb-0">📝 Новая заявка</h3>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" action="/create/">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="client_name" class="form-label">Имя клиента *</label>
+                                <input type="text" class="form-control" id="client_name" name="client_name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="contacts" class="form-label">Контакты *</label>
+                                <input type="text" class="form-control" id="contacts" name="contacts" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="service" class="form-label">Услуга *</label>
+                                <input type="text" class="form-control" id="service" name="service" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Описание</label>
+                                <textarea class="form-control" id="description" name="description" rows="4"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="status" class="form-label">Статус</label>
+                                <select class="form-select" id="status" name="status">
+                                    <option value="new">Новая</option>
+                                    <option value="in_progress">В работе</option>
+                                    <option value="done">Завершена</option>
+                                    <option value="canceled">Отменена</option>
+                                </select>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-success">✅ Создать заявку</button>
+                                <a href="/" class="btn btn-secondary">← Назад</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div>
-            <label for="contacts">Контакты:</label>
-            <input type="text" id="contacts" name="contacts" required>
-        </div>
-        <div>
-            <label for="service">Услуга:</label>
-            <input type="text" id="service" name="service" required>
-        </div>
-        <div>
-            <label for="description">Описание:</label>
-            <textarea id="description" name="description" rows="4"></textarea>
-        </div>
-        <div>
-            <label for="status">Статус:</label>
-            <select id="status" name="status">
-                <option value="new">Новая</option>
-                <option value="in_progress">В работе</option>
-                <option value="done">Завершена</option>
-                <option value="canceled">Отменена</option>
-            </select>
-        </div>
-        <button type="submit">Создать заявку</button>
-    </form>
-
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-</html> 
+</html>

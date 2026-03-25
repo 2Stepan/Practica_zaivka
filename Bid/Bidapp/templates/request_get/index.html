@@ -1,38 +1,67 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid black;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-    </style>
+    <title>Поиск заявки</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-    {% csrf_token %}
-    <form action="/request_get/" method="get">
-        <label for="book_id">Введите ID:</label>
-        <input type="number" name="request_item_id" value="{{ request_item_id|default:'' }}" required>
-        <button type="submit">Найти</button>
-    </form>
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-secondary text-white">
+                        <h3 class="mb-0">🔍 Поиск заявки по ID</h3>
+                    </div>
+                    <div class="card-body">
+                        <form action="/request_get/" method="get" class="mb-4">
+                            <div class="mb-3">
+                                <label for="request_item_id" class="form-label">Введите ID заявки:</label>
+                                <input type="number" class="form-control" name="request_item_id" value="{{ request_item_id|default:'' }}" required>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-primary">🔎 Найти</button>
+                                <a href="/" class="btn btn-secondary">← Назад</a>
+                            </div>
+                        </form>
 
-    {% if request_item %}
-        <h2>Результат поиска</h2>
-        <h1>{{ request_item.service }}</h1>
-        <p><strong>Клиент:</strong> {{ request_item.client_name }}</p>
-        <p><strong>Дата создания:</strong> {{ request_item.date_created }}</p>
-        <p><strong>Статус:</strong> {{ request_item.status }}</p>
-    {% endif %}
+                        {% if request_item %}
+                            <div class="alert alert-success">
+                                <h4 class="alert-heading">✅ Заявка найдена!</h4>
+                                <hr>
+                                <p><strong>ID:</strong> {{ request_item.id }}</p>
+                                <p><strong>Клиент:</strong> {{ request_item.client_name }}</p>
+                                <p><strong>Контакты:</strong> {{ request_item.contacts }}</p>
+                                <p><strong>Услуга:</strong> {{ request_item.service }}</p>
+                                <p><strong>Описание:</strong> {{ request_item.description }}</p>
+                                <p><strong>Дата создания:</strong> {{ request_item.date_created|date:"d.m.Y H:i" }}</p>
+                                <p><strong>Статус:</strong> 
+                                    {% if request_item.status == 'new' %}
+                                        <span class="badge bg-primary">Новая</span>
+                                    {% elif request_item.status == 'in_progress' %}
+                                        <span class="badge bg-warning">В работе</span>
+                                    {% elif request_item.status == 'done' %}
+                                        <span class="badge bg-success">Завершена</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Отменена</span>
+                                    {% endif %}
+                                </p>
+                                <div class="mt-2">
+                                    <a href="{% url 'update' request_item.id %}" class="btn btn-sm btn-warning">✏️ Редактировать</a>
+                                </div>
+                            </div>
+                        {% elif request_item_id %}
+                            <div class="alert alert-danger text-center">
+                                <h5>❌ Заявка с ID = {{ request_item_id }} не найдена!</h5>
+                                <p class="mb-0">Проверьте правильность введенного номера</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
