@@ -1,12 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Request
 # Create your views here.
 
- 
+#Артем
 def show(request):
     return render(request, 'main/index.html')
-
-
 
 def add(request): 
     if request.method == 'POST':
@@ -38,3 +36,48 @@ def view_requests(request):
     requests_list = Request.objects.all()
     # Передаем список заявок в шаблон
     return render(request, 'requests/index.html', {'requests': requests_list})
+
+
+#Егор
+def update(request, request_id):
+    request_object = get_object_or_404(Request, id = request_id)
+
+    if request.method == 'POST':
+        service = request.POST.get('service')
+        description = request.POST.get('description')
+        status = request.POST.get('status')
+
+
+        request_object.service = service
+        request_object.description = description
+        request_object.status = status
+
+        request_object.save()
+
+        return redirect('view_requests')
+    
+    return render (request, 'update/index.html', {'request': request_object})
+
+def delete(request, request_id):
+    request_object = get_object_or_404(Request, id=request_id)
+
+    request_object.delete()
+
+    return redirect('view_requests')
+    
+
+
+
+
+#Ваня
+def get(request):
+    request_item = None
+    request_item_id = request.GET.get('request_item_id')
+
+    if request_item_id:
+        request_item = get_object_or_404(Request, id=request_item_id)
+
+    return render(request, 'request_get/index.html', {
+        'request_item': request_item,
+        'request_item_id': request_item_id,
+    })

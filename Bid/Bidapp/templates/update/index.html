@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Редактирование {{request.id}}</h1>
+    <form method = "POST">
+        {% csrf_token %}
+        <div>
+            <label for="service">Услуги</label>
+            <input type="text" id="service" name="service" required>
+        </div>
+        <div>
+            <label for="description">Описание</label>
+            <input type="text" id="description" name="description" required>
+        </div>
+        <div>
+            <label for="status">Статус</label>
+            <select name="status" id="status">
+                <option value="new">Новая</option>
+                <option value="in_progress">В работе</option>
+                <option value="done">Завершена</option>
+                <option value="canceled">Отменена</option>
+            </select>
+        </div>
+        <button type="submit">Редактировать заявку</button>
+        <a href="{% url 'view_requests' %}">Назад</a>
+    </form>
+</body>
+</html>

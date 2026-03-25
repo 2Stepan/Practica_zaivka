@@ -30,6 +30,8 @@
                 <th>Описание</th>
                 <th>Статус</th>
                 <th>Дата создания</th>
+                <th>Редактировать</th>
+                <th>Удалить</th>
             </tr>
         </thead>
         <tbody>
@@ -42,7 +44,11 @@
                 <td>{{ request.description }}</td>
                 <td>{{ request.get_status_display }}</td>
                 <td>{{ request.date_created }}</td>
+                <td><a href="{% url 'update' request.id %}">Редактировать</a></td>
+                <td><a href="{% url 'delete' request.id %}">Удалить</a></td>
+                
             </tr>
+            
             {% endfor %}
         </tbody>
     </table>
