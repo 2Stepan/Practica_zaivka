@@ -6,6 +6,19 @@ from django.contrib.auth.hashers import check_password
 
 #Артем
 def show(request):
+
+    context = {}
+
+    if 'user_id' in request.session:
+        try:
+            user = users.objects.get(id=request.session['user_id'])
+            context['user'] = user
+            context['is_authenticated'] = True
+        except users.DoesNotExist:
+            request.session.flush()
+            context['is_authenticated'] = False
+    else:
+        context['is_authenticated'] = False
     return render(request, 'main/index.html')
 
 def reg(request):
@@ -45,7 +58,12 @@ def login(request):
 
         # Проверяем, существует ли пользователь и совпадает ли пароль
         if user and check_password(password, user.password):
-            print("Вы вошли в аккаунт, Поздравляем!")
+
+            request.session['user_id'] = user.id
+            request.session['user_email'] = user.email
+            request.session['user_role'] = user.role
+            print("{ user.email } вы вошли в аккаунт, Поздравляем!")
+
             data = {"header": email, "message": "Добро пожаловать!"}
             return render(request, 'main/index.html', context=data)
         else:
@@ -56,12 +74,23 @@ def login(request):
     print("Страница отрендерилась!")
     return render(request, 'auth/index.html')
 
+def logout(request):
+
+    request.session.flush()
+
+    return redirect('show')
+
 
 
 
 def add(request): 
+    if 'user_id' not in request.session:
+        
+        return redirect('login')
+    
     if request.method == 'POST':
         # Получаем данные из формы
+        user = users.objects.get(id=request.session['user_id'])
         client_name = request.POST.get('client_name')
         contacts = request.POST.get('contacts')
         service = request.POST.get('service')
@@ -71,6 +100,7 @@ def add(request):
         # Создаём новую заявку
         Request.objects.create(
             client_name=client_name,
+            client_email=user.email,
             contacts=contacts,
             service=service,
             description=description,

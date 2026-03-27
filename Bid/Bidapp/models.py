@@ -26,6 +26,15 @@ class Request(models.Model):
         ("canceled", "Отменена"),
     ]
 
+    user = models.ForeignKey(
+        users,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name='requests',
+        verbose_name="Пользователи"
+    )
+
     client_name = models.CharField(
         max_length=255,
         verbose_name="Имя клиента"
