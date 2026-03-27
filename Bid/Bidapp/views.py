@@ -1,10 +1,63 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Request
+from .models import Request, users
+from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import check_password
 # Create your views here.
 
 #Артем
 def show(request):
     return render(request, 'main/index.html')
+
+def reg(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        role = request.POST.get('role')  # Получаем выбранную роль
+
+        if users.objects.filter(email=email).exists():
+            print("Такой пользователь уже существует!")
+            data = {"header": "Такой пользователь существует", "message": "Попробуйте снова!"}
+            return render(request, "register/index.html", context=data)
+
+        hashed_password = make_password(password)
+
+        users.objects.create(
+            email=email,
+            password=hashed_password,
+            role=role  # Сохраняем выбранную роль
+        )
+
+        data = {"header": email, "message": "Добро пожаловать!"}
+        return render(request, "main/index.html", context=data)
+
+    return render(request, 'register/index.html')
+
+
+from django.contrib.auth.hashers import check_password
+
+def login(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        # Пользователь с указанным email
+        user = users.objects.filter(email=email).first()
+
+        # Проверяем, существует ли пользователь и совпадает ли пароль
+        if user and check_password(password, user.password):
+            print("Вы вошли в аккаунт, Поздравляем!")
+            data = {"header": email, "message": "Добро пожаловать!"}
+            return render(request, 'main/index.html', context=data)
+        else:
+            print("Нет аккаунта!")
+            data = {"header": "Неправильный пароль", "message": "Попробуйте снова!"}
+            return render(request, 'auth/index.html', context=data)
+
+    print("Страница отрендерилась!")
+    return render(request, 'auth/index.html')
+
+
+
 
 def add(request): 
     if request.method == 'POST':

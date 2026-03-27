@@ -3,6 +3,19 @@ from django.db import models
 # Create your models here.
 from django.db import models
 
+class users(models.Model):
+    ROLE_CHOICES = [
+        ('designer', 'Дизайнер'),
+        ('backend', 'Программист Backend'),
+        ('frontend', 'Программист Frontend'),
+        ('fullstack', 'Fullstack-разработчик'),
+        ('manager', 'Менеджер'),
+    ]
+
+    id = models.AutoField(primary_key=True)
+    email = models.CharField(max_length=100, unique=True)
+    password = models.CharField(max_length=100)
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='designer')
 
 class Request(models.Model):
 
@@ -17,6 +30,9 @@ class Request(models.Model):
         max_length=255,
         verbose_name="Имя клиента"
     )
+    client_email = models.EmailField(
+        verbose_name="Email клиента"
+        )
 
     contacts = models.CharField(
         max_length=255,

@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from Bidapp.views import show, add, view_requests, get, update, delete
+from Bidapp.views import show, add, view_requests, get, update, delete, login, reg
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,4 +26,6 @@ urlpatterns = [
     path('update/<int:request_id>/', update, name='update'),
     path('delete/<int:request_id>/', delete, name='delete'),
     path('request_get/', get, name='request_get'),
+    path('auth/', login, name = 'auth'),
+    path('register/', reg),
 ]

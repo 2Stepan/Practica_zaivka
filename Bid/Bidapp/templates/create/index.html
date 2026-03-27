@@ -22,6 +22,11 @@
                                 <input type="text" class="form-control" id="client_name" name="client_name" required>
                             </div>
                             <div class="mb-3">
+                                <label for="client_email" class="form-label">Email клиента</label>
+                                <input type="email" class="form-control" id="client_email" name="client_email"
+                                       value="{{ request.user.email }}" readonly>
+                            </div>
+                            <div class="mb-3">
                                 <label for="contacts" class="form-label">Контакты *</label>
                                 <input type="text" class="form-control" id="contacts" name="contacts" required>
                             </div>
