@@ -71,19 +71,23 @@ def delete(request, request_id):
 
 # Ваня - исправил поиск, теперь показывает сообщение если нет заявки
 def get(request):
-    request_item = None
-    request_item_id = request.GET.get('request_item_id')
-    
-    # Проверяем, если ID ввели
-    if request_item_id:
-        try:
-            # Пытаемся найти заявку, если нет - ловим ошибку
-            request_item = Request.objects.get(id=request_item_id)
-        except Request.DoesNotExist:
-            # Если заявки нет, оставляем request_item = None
-            request_item = None
-    
-    return render(request, 'request_get/index.html', {
-        'request_item': request_item,
-        'request_item_id': request_item_id,
-    })
+
+
+    query = request.GET.get("q")
+
+    requests = Request.objects.all()
+
+    if query:
+        from django.db.models import Q
+
+        requests = Request.objects.filter(
+            Q(id__icontains=query) |
+            Q(client_name__icontains=query) |
+            Q(service__icontains=query)
+        )
+
+    return render(
+        request,
+        "partials/request_rows.html",
+        {"requests": requests}
+    )

@@ -1,0 +1,43 @@
+{% for request in requests %}
+<tr>
+    <td>{{ request.id }}</td>
+    <td>{{ request.client_name }}</td>
+    <td>{{ request.contacts }}</td>
+    <td>{{ request.service }}</td>
+    <td>{{ request.description|truncatechars:50 }}</td>
+
+    <td>
+        {% if request.status == 'new' %}
+            <span class="badge bg-primary">Новая</span>
+        {% elif request.status == 'in_progress' %}
+            <span class="badge bg-warning">В работе</span>
+        {% elif request.status == 'done' %}
+            <span class="badge bg-success">Завершена</span>
+        {% else %}
+            <span class="badge bg-danger">Отменена</span>
+        {% endif %}
+    </td>
+
+    <td>
+        {{ request.date_created|date:"d.m.Y H:i" }}
+    </td>
+
+    <td>
+        <a href="{% url 'update' request.id %}" class="btn btn-sm btn-warning">
+            ✏️
+        </a>
+
+        <a href="{% url 'delete' request.id %}" 
+           class="btn btn-sm btn-danger"
+           onclick="return confirm('Точно удалить?')">
+            🗑️
+        </a>
+    </td>
+</tr>
+{% empty %}
+<tr>
+    <td colspan="8" class="text-center">
+        Ничего не найдено
+    </td>
+</tr>
+{% endfor %}
